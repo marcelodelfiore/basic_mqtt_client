@@ -1,15 +1,24 @@
 import paho.mqtt.client as paho
-
+import time
+import datetime
 """
  Basic client connecting to Cloud MQTT
  
 """
+MQTT_FRAME_SIZE = 6
+
+data_list = []
+data_pointer = 0
 
 broker_address = 'm15.cloudmqtt.com'
 broker_port = 12460
 broker_user_name = 'fjobiivi'
 broker_password = 'ik8o68Dsnlgk'
 
+
+def update_database(topic, data):
+
+  print(f'Tópico: {topic}, Data: {data}')
 
 # callback functions
 def on_connect(client, userdata, flags, rc):
@@ -18,17 +27,19 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-  topic = str(msg._topic)[-3:-1]
+
+  topic = (str(msg._topic))[-3:-1]
+  payload = str(msg.payload)
 
   if topic in ['va', 'vb', 'vc']:
-    mess = str(msg.payload)[-4:-1]
-  elif topic in ['ia', 'ib', 'ic']:
-    mess = str(msg.payload)[-3:-1]
-  else:
-    mess = str(msg.payload)[-5:-1]
+    data = payload.strip("'b")
+  elif topic in ['pa', 'pb', 'pc']:
+    data = payload.strip("'b")
+  elif topic in ['ts']:
+    data = payload.strip("'b")
+    #data = time.ctime(int(payload.strip("'b")))
 
-  print(f'Grandeza: {topic}, Valor: {mess}')
-
+  update_database(topic, data)
 
 if __name__ == '__main__':
 
