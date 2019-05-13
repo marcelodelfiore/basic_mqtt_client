@@ -1,0 +1,4 @@
+[submodule "deps/paho-mqtt"]
+	path = deps/paho-mqtt
+	url = https://github.com/eclipse/paho.mqtt.python.git
+	branch = master
