@@ -1,2 +1,4 @@
 paho-mqtt==1.4.0
-
+idna==2.8
+requests==2.22.0
+urllib3==1.25.2
