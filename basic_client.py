@@ -1,3 +1,5 @@
+from _datetime import datetime
+
 import paho.mqtt.client as paho
 import requests
 
@@ -50,7 +52,7 @@ def on_message(client, userdata, msg):
   _, va,_, vb, _, vc, _, pa, _, pb, _, pc, _, ts = payload.split(";")
   ts = ts.strip("'b")
 
-  unique_ID = ts
+  unique_ID = datetime.utcfromtimestamp(int(ts)).strftime('%Y-%m-%dT%H:%M:%SZ')
 
   data_list[:] = (int(va), int(vb), int(vc), int(pa), int(pb), int(pc))
 
