@@ -14,15 +14,16 @@ broker_port = 12460
 broker_user_name = 'fjobiivi'
 broker_password = 'ik8o68Dsnlgk'
 
-MASTER_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfX3NhbHQiOiIxNTU4MzY4NjMzNDAyIiwicGVybWlzc2lvbl9sZXZlbCI6MywicHJvamVjdF9pZCI6NDEyMTEsImNsaWVudF9pZCI6NzUxfQ.sgKqR5Lbr9e1A-hczXkxRcePvRyqfDF-D3vAzdEmjAs"
+MASTER_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfX3NhbHQiOiIxNTYwNjI3NjY5MjEyIiwicGVybWlzc2lvbl9sZXZlbCI6MywicHJvamVjdF9pZCI6MTg1ODQ3LCJjbGllbnRfaWQiOjc1MX0.dBAKGoFwKbZp3n2vdRcHS9a_0KAwLfpVoj86NTc--2M"
 sd_insert_endpoint_url = "https://api.slicingdice.com/v1/insert"
 sd_insert_header = {'Authorization': MASTER_API_KEY, 'content-type': 'application/json'}
 
 
-def update_database(id, data):
+def update_database(topic, id, data):
 
   insert_data = {
     id: {
+      "dimension": topic,
       "va": data[0],
       "vb": data[1],
       "vc": data[2],
@@ -49,11 +50,13 @@ def on_message(client, userdata, msg):
   _, va,_, vb, _, vc, _, pa, _, pb, _, pc, _, ts = payload.split(";")
   ts = ts.strip("'b")
 
-  unique_ID = topic + "-" + ts
+  unique_ID = ts
 
   data_list[:] = (int(va), int(vb), int(vc), int(pa), int(pb), int(pc))
 
-  update_database(unique_ID, data_list)
+  dimension = topic.replace(":", "-")
+
+  update_database(dimension, unique_ID, data_list)
 
 
 if __name__ == '__main__':
