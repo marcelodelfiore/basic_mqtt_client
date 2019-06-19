@@ -1,4 +1,5 @@
 from _datetime import datetime
+from random import random
 
 import paho.mqtt.client as paho
 import requests
@@ -16,7 +17,7 @@ broker_port = 12460
 broker_user_name = 'fjobiivi'
 broker_password = 'ik8o68Dsnlgk'
 
-MASTER_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfX3NhbHQiOiIxNTYwNjI3NjY5MjEyIiwicGVybWlzc2lvbl9sZXZlbCI6MywicHJvamVjdF9pZCI6MTg1ODQ3LCJjbGllbnRfaWQiOjc1MX0.dBAKGoFwKbZp3n2vdRcHS9a_0KAwLfpVoj86NTc--2M"
+MASTER_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfX3NhbHQiOiIxNTYwOTcwMDQ0OTA4IiwicGVybWlzc2lvbl9sZXZlbCI6MywicHJvamVjdF9pZCI6MTg1ODg3LCJjbGllbnRfaWQiOjc1MX0.RL5VESP63Q6QaZuubcO4aZdb9vSaWPh6047ZrLROfno"
 sd_insert_endpoint_url = "https://api.slicingdice.com/v1/insert"
 sd_insert_header = {'Authorization': MASTER_API_KEY, 'content-type': 'application/json'}
 
@@ -31,12 +32,16 @@ def update_database(topic, id, data):
       "vc": data[2],
       "pa": data[3],
       "pb": data[4],
-      "pc": data[5]
+      "pc": data[5],
+      "timestamp": id
     },
     "auto-create": ["dimension", "column"]
   }
 
   resp = requests.post(url=sd_insert_endpoint_url, json=insert_data, headers=sd_insert_header)
+
+  print(id, insert_data, resp.content)
+
 
 # callback functions
 def on_connect(client, userdata, flags, rc):
